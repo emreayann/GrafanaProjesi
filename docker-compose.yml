@@ -1,0 +1,42 @@
+services:
+  influxdb:
+    image: influxdb:2.7.1
+    container_name: doviz_influxdb
+    ports:
+      - "8087:8086"
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=emre6161
+      - DOCKER_INFLUXDB_INIT_PASSWORD=emre6161
+      - DOCKER_INFLUXDB_INIT_ORG=CilginHamsi
+      - DOCKER_INFLUXDB_INIT_BUCKET=doviz
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=y9CidQ10vACWiziW-AK-PPWB28P_KaBJmKJQp5wHOArHFlswudSGNMI1OWcO-YuAGUopDQjqmlGS2R3TmvYJuA==
+    command: influxd
+    networks:
+      - doviz_network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: doviz_grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+      - GF_USERS_ALLOW_SIGN_UP=false
+    depends_on:
+      - influxdb
+    networks:
+      - doviz_network
+
+networks:
+  doviz_network:
+    driver: bridge
+
+volumes:
+  influxdb_data:
+  grafana_data: 
